@@ -2468,7 +2468,7 @@ static void TestUserData()
             VkBuffer buf; VmaAllocation alloc; VmaAllocationInfo allocInfo;
             res = vmaCreateBuffer(g_hAllocator, &bufCreateInfo, &allocCreateInfo, &buf, &alloc, &allocInfo);
             TEST(res == VK_SUCCESS);
-            TEST(allocInfo.pUserData = numberAsPointer);
+            TEST(allocInfo.pUserData == numberAsPointer);
 
             vmaGetAllocationInfo(g_hAllocator, alloc, &allocInfo);
             TEST(allocInfo.pUserData == numberAsPointer);
@@ -3027,7 +3027,7 @@ static void TestLinearAllocator()
         VmaPoolStats stats;
         vmaGetPoolStats(g_hAllocator, pool, &stats);
         TEST(stats.size == poolCreateInfo.blockSize);
-        TEST(stats.unusedSize = poolCreateInfo.blockSize - bufSumSize);
+        TEST(stats.unusedSize == poolCreateInfo.blockSize - bufSumSize);
         TEST(stats.allocationCount == bufInfo.size());
 
         // Destroy the buffers in random order.
@@ -4145,7 +4145,7 @@ static void TestPool_SameSize()
         VmaPoolStats poolStats = {};
         vmaGetPoolStats(g_hAllocator, pool, &poolStats);
         TEST(poolStats.allocationCount == items.size());
-        TEST(poolStats.size = BUF_COUNT * BUF_SIZE);
+        TEST(poolStats.size == BUF_COUNT * BUF_SIZE);
         TEST(poolStats.unusedRangeCount == 1);
         TEST(poolStats.unusedRangeSizeMax == BUF_SIZE);
         TEST(poolStats.unusedSize == BUF_SIZE);
