@@ -4261,6 +4261,10 @@ static bool ValidatePattern(const void* pMemory, size_t size, uint8_t pattern)
     return true;
 }
 
+#ifdef _MSC_VER 
+#pragma warning(push)
+#pragma warning(disable: 4505)
+#endif
 static void TestAllocationsInitialization()
 {
     VkResult res;
@@ -4339,6 +4343,9 @@ static void TestAllocationsInitialization()
     vmaDestroyBuffer(g_hAllocator, firstBuf, firstAlloc);
     vmaDestroyPool(g_hAllocator, bufAllocCreateInfo.pool);
 }
+#ifdef _MSC_VER 
+#pragma warning(pop)
+#endif
 
 static void TestPool_Benchmark(
     PoolTestResult& outResult,
@@ -5641,6 +5648,10 @@ static void WritePoolTestResult(
         result.FailedAllocationTotalSize);
 }
 
+#ifdef _MSC_VER 
+#pragma warning(push)
+#pragma warning(disable: 4505)
+#endif
 static void PerformCustomMainTest(FILE* file)
 {
     Config config{};
@@ -5702,6 +5713,9 @@ static void PerformCustomPoolTest(FILE* file)
 
     WritePoolTestResult(file, "Code desc", "Test desc", config, result);
 }
+#ifdef _MSC_VER 
+#pragma warning(pop)
+#endif
 
 static void PerformMainTests(FILE* file)
 {
@@ -6414,6 +6428,10 @@ static void BasicTestAllocatePages()
     vmaDestroyPool(g_hAllocator, pool);
 }
 
+#ifdef _MSC_VER 
+#pragma warning(push)
+#pragma warning(disable: 4505)
+#endif
 // Test the testing environment.
 static void TestGpuData()
 {
@@ -6448,6 +6466,9 @@ static void TestGpuData()
 
     DestroyAllAllocations(allocInfo);
 }
+#ifdef _MSC_VER 
+#pragma warning(pop)
+#endif
 
 void Test()
 {
