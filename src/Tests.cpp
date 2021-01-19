@@ -6166,7 +6166,7 @@ static void PerformPoolTests(FILE* file)
                     config.PoolSize = avgResourceSize * AVG_RESOURCES_PER_POOL;
 
                     // 0 = 66%, 1 = 133%, 2 = 100%, 3 = 33%, 4 = 166%
-                    size_t subscriptionModeCount;
+                    size_t subscriptionModeCount = 2;
                     switch(ConfigType)
                     {
                     case CONFIG_TYPE_MINIMUM: subscriptionModeCount = 2; break;
