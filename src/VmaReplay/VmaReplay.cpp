@@ -582,9 +582,9 @@ struct VmaAllocateMemoryPagesStats : public StructureStats
 {
     MinMaxAvg<size_t> allocationCount;
 
-    void PostValue(size_t allocationCount)
+    void PostValue(size_t nextAllocationCount)
     {
-        this->allocationCount.PostValue(allocationCount);
+        this->allocationCount.PostValue(nextAllocationCount);
     }
 
     void Print() const
