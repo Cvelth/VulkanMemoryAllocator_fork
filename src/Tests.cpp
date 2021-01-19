@@ -1092,7 +1092,14 @@ static void ValidateGpuData(const AllocInfo* allocInfo, size_t allocInfoCount)
         }
         else
         {
+#ifdef _MSC_VER 
+#pragma warning(push)
+#pragma warning(disable: 4127)
+#endif
             TEST(0 && "Images not currently supported.");
+#ifdef _MSC_VER 
+#pragma warning(pop)
+#endif
         }
     }
 
@@ -1523,7 +1530,7 @@ void TestDefragmentationSimple()
     Allocation that must be move to an overlapping place using memmove().
     Create 2 buffers, second slightly bigger than the first. Delete first. Then defragment.
     */
-    if(VMA_DEBUG_MARGIN == 0) // FAST algorithm works only when DEBUG_MARGIN disabled.
+#if VMA_DEBUG_MARGIN == 0 // FAST algorithm works only when DEBUG_MARGIN disabled.
     {
         AllocInfo allocInfo[2];
 
@@ -1543,6 +1550,7 @@ void TestDefragmentationSimple()
         ValidateAllocationsData(&allocInfo[1], 1);
         DestroyAllocation(allocInfo[1]);
     }
+#endif
 
     vmaDestroyPool(g_hAllocator, pool);
 }
@@ -3004,7 +3012,7 @@ static void TestLinearAllocator()
         VkDeviceSize bufSumSize = 0;
         for(size_t i = 0; i < maxBufCount; ++i)
         {
-			bufCreateInfo.size = align_up<VkDeviceSize>(bufSizeMin + rand.Generate() % (bufSizeMax - bufSizeMin), 16);
+            bufCreateInfo.size = align_up<VkDeviceSize>(bufSizeMin + rand.Generate() % (bufSizeMax - bufSizeMin), 16);
             BufferInfo newBufInfo;
             res = vmaCreateBuffer(g_hAllocator, &bufCreateInfo, &allocCreateInfo,
                 &newBufInfo.Buffer, &newBufInfo.Allocation, &allocInfo);
@@ -3879,10 +3887,11 @@ static void BenchmarkAlgorithms(FILE* file)
     }
 
     uint32_t freeOrderCount = 1;
-    if(ConfigType >= CONFIG_TYPE::CONFIG_TYPE_LARGE)
-        freeOrderCount = 3;
-    else if(ConfigType >= CONFIG_TYPE::CONFIG_TYPE_SMALL)
-        freeOrderCount = 2;
+#if ConfigType >= CONFIG_TYPE_LARGE
+    freeOrderCount = 3;
+#elif ConfigType >= CONFIG_TYPE_SMALL
+    freeOrderCount = 2;
+#endif
 
     const uint32_t emptyCount = ConfigType >= CONFIG_TYPE::CONFIG_TYPE_SMALL ? 2 : 1;
     const uint32_t allocStrategyCount = GetAllocationStrategyCount();
@@ -5697,7 +5706,9 @@ static void PerformCustomPoolTest(FILE* file)
 static void PerformMainTests(FILE* file)
 {
     uint32_t repeatCount = 1;
-    if(ConfigType >= CONFIG_TYPE_MAXIMUM) repeatCount = 3;
+#if ConfigType >= CONFIG_TYPE_MAXIMUM
+    repeatCount = 3;
+#endif
 
     Config config{};
     config.RandSeed = 65735476;
@@ -5764,7 +5775,9 @@ static void PerformMainTests(FILE* file)
 
         // 0 = buffers, 1 = images, 2 = buffers and images
         size_t buffersVsImagesCount = 2;
-        if(ConfigType >= CONFIG_TYPE_LARGE) ++buffersVsImagesCount;
+#if ConfigType >= CONFIG_TYPE_LARGE
+        ++buffersVsImagesCount;
+#endif
         for(size_t buffersVsImagesIndex = 0; buffersVsImagesIndex < buffersVsImagesCount; ++buffersVsImagesIndex)
         {
             std::string desc2 = desc1;
@@ -5778,7 +5791,9 @@ static void PerformMainTests(FILE* file)
 
             // 0 = small, 1 = large, 2 = small and large
             size_t smallVsLargeCount = 2;
-            if(ConfigType >= CONFIG_TYPE_LARGE) ++smallVsLargeCount;
+#if ConfigType >= CONFIG_TYPE_LARGE
+            ++smallVsLargeCount;
+#endif
             for(size_t smallVsLargeIndex = 0; smallVsLargeIndex < smallVsLargeCount; ++smallVsLargeIndex)
             {
                 std::string desc3 = desc2;
@@ -5797,7 +5812,9 @@ static void PerformMainTests(FILE* file)
 
                 // 0 = varying sizes min...max, 1 = set of constant sizes
                 size_t constantSizesCount = 1;
-                if(ConfigType >= CONFIG_TYPE_SMALL) ++constantSizesCount;
+#if ConfigType >= CONFIG_TYPE_SMALL
+                ++constantSizesCount;
+#endif
                 for(size_t constantSizesIndex = 0; constantSizesIndex < constantSizesCount; ++constantSizesIndex)
                 {
                     std::string desc4 = desc3;
@@ -5880,9 +5897,13 @@ static void PerformMainTests(FILE* file)
 
                     // 0 = 100%, additional_operations = 0, 1 = 50%, 2 = 5%, 3 = 95% additional_operations = a lot
                     size_t beginBytesToAllocateCount = 1;
-                    if(ConfigType >= CONFIG_TYPE_SMALL) ++beginBytesToAllocateCount;
-                    if(ConfigType >= CONFIG_TYPE_AVERAGE) ++beginBytesToAllocateCount;
-                    if(ConfigType >= CONFIG_TYPE_LARGE) ++beginBytesToAllocateCount;
+#if ConfigType >= CONFIG_TYPE_SMALL
+                    ++beginBytesToAllocateCount;
+#elif ConfigType >= CONFIG_TYPE_AVERAGE
+                    ++beginBytesToAllocateCount;
+#elif ConfigType >= CONFIG_TYPE_LARGE
+                    ++beginBytesToAllocateCount;
+#endif
                     for(size_t beginBytesToAllocateIndex = 0; beginBytesToAllocateIndex < beginBytesToAllocateCount; ++beginBytesToAllocateIndex)
                     {
                         std::string desc5 = desc4;
@@ -5964,7 +5985,9 @@ static void PerformPoolTests(FILE* file)
     const size_t AVG_RESOURCES_PER_POOL = 300;
 
     uint32_t repeatCount = 1;
-    if(ConfigType >= CONFIG_TYPE_MAXIMUM) repeatCount = 3;
+#if ConfigType >= CONFIG_TYPE_MAXIMUM
+    repeatCount = 3;
+#endif
 
     PoolTestConfig config{};
     config.RandSeed = 2346343;
@@ -6005,7 +6028,9 @@ static void PerformPoolTests(FILE* file)
 
         // 0 = buffers, 1 = images, 2 = buffers and images
         size_t buffersVsImagesCount = 2;
-        if(ConfigType >= CONFIG_TYPE_LARGE) ++buffersVsImagesCount;
+#if ConfigType >= CONFIG_TYPE_LARGE
+        ++buffersVsImagesCount;
+#endif
         for(size_t buffersVsImagesIndex = 0; buffersVsImagesIndex < buffersVsImagesCount; ++buffersVsImagesIndex)
         {
             std::string desc2 = desc1;
@@ -6019,7 +6044,9 @@ static void PerformPoolTests(FILE* file)
 
             // 0 = small, 1 = large, 2 = small and large
             size_t smallVsLargeCount = 2;
-            if(ConfigType >= CONFIG_TYPE_LARGE) ++smallVsLargeCount;
+#if ConfigType >= CONFIG_TYPE_LARGE
+            ++smallVsLargeCount;
+#endif
             for(size_t smallVsLargeIndex = 0; smallVsLargeIndex < smallVsLargeCount; ++smallVsLargeIndex)
             {
                 std::string desc3 = desc2;
@@ -6038,7 +6065,9 @@ static void PerformPoolTests(FILE* file)
 
                 // 0 = varying sizes min...max, 1 = set of constant sizes
                 size_t constantSizesCount = 1;
-                if(ConfigType >= CONFIG_TYPE_SMALL) ++constantSizesCount;
+#if ConfigType >= CONFIG_TYPE_SMALL
+                ++constantSizesCount;
+#endif
                 for(size_t constantSizesIndex = 0; constantSizesIndex < constantSizesCount; ++constantSizesIndex)
                 {
                     std::string desc4 = desc3;
