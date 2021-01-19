@@ -806,22 +806,14 @@ private:
 static Statistics* g_Statistics;
 
 static void VKAPI_CALL AllocateDeviceMemoryCallback(
-    VmaAllocator      allocator,
-    uint32_t          memoryType,
-    VkDeviceMemory    memory,
-    VkDeviceSize      size,
-    void*             pUserData)
+    VmaAllocator, uint32_t memoryType, VkDeviceMemory, VkDeviceSize size, void*)
 {
     g_Statistics->RegisterDeviceMemoryAllocation(memoryType, size);
 }
 
 /// Callback function called before vkFreeMemory.
 static void VKAPI_CALL FreeDeviceMemoryCallback(
-    VmaAllocator      allocator,
-    uint32_t          memoryType,
-    VkDeviceMemory    memory,
-    VkDeviceSize      size,
-    void*             pUserData)
+    VmaAllocator, uint32_t, VkDeviceMemory, VkDeviceSize, void*)
 {
     // Nothing.
 }
@@ -1319,8 +1311,7 @@ bool ConfigurationParser::Parse(LineSplit& lineSplit)
 void ConfigurationParser::Compare(
     const VkPhysicalDeviceProperties& currDevProps,
     const VkPhysicalDeviceMemoryProperties& currMemProps,
-    uint32_t vulkanApiVersion,
-    bool currMemoryBudgetEnabled)
+    uint32_t vulkanApiVersion, bool)
 {
     char vulkanApiVersionStr[32];
     sprintf_s(vulkanApiVersionStr, "%u,%u", VK_VERSION_MAJOR(vulkanApiVersion), VK_VERSION_MINOR(vulkanApiVersion));
@@ -1497,10 +1488,8 @@ void ConfigurationParser::CompareMemProps(
 static const char* const VALIDATION_LAYER_NAME = "VK_LAYER_KHRONOS_validation";
 
 static VkBool32 VKAPI_PTR MyDebugReportCallback(
-    VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
-    VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
-    const VkDebugUtilsMessengerCallbackDataEXT*      pCallbackData,
-    void*                                            pUserData)
+    VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void*)
 {
     assert(pCallbackData && pCallbackData->pMessageIdName && pCallbackData->pMessage);
     printf("%s \xBA %s\n", pCallbackData->pMessageIdName, pCallbackData->pMessage);

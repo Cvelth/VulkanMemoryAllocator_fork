@@ -131,8 +131,7 @@ static VkImageView g_hTextureImageView;
 static std::atomic_uint32_t g_CpuAllocCount;
 
 static void* CustomCpuAllocation(
-    void* pUserData, size_t size, size_t alignment,
-    VkSystemAllocationScope allocationScope)
+    void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope)
 {
     assert(pUserData == CUSTOM_CPU_ALLOCATION_CALLBACK_USER_DATA);
     void* const result = _aligned_malloc(size, alignment);
@@ -144,8 +143,7 @@ static void* CustomCpuAllocation(
 }
 
 static void* CustomCpuReallocation(
-    void* pUserData, void* pOriginal, size_t size, size_t alignment,
-    VkSystemAllocationScope allocationScope)
+    void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope)
 {
     assert(pUserData == CUSTOM_CPU_ALLOCATION_CALLBACK_USER_DATA);
     void* const result = _aligned_realloc(pOriginal, size, alignment);
@@ -218,10 +216,8 @@ void LoadShader(std::vector<char>& out, const char* fileName)
 }
 
 static VkBool32 VKAPI_PTR MyDebugReportCallback(
-    VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
-    VkDebugUtilsMessageTypeFlagsEXT                  messageTypes,
-    const VkDebugUtilsMessengerCallbackDataEXT*      pCallbackData,
-    void*                                            pUserData)
+    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT,
+    const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void*)
 {
     assert(pCallbackData && pCallbackData->pMessageIdName && pCallbackData->pMessage);
 

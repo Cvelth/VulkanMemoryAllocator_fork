@@ -5534,7 +5534,8 @@ static void WriteMainTestResult(
     FILE* file,
     const char* codeDescription,
     const char* testDescription,
-    const Config& config, const Result& result)
+    const Config&,
+    const Result& result)
 {
     float totalTimeSeconds = ToFloatSeconds(result.TotalTime);
     float allocationTimeMinSeconds = ToFloatSeconds(result.AllocationTimeMin);
