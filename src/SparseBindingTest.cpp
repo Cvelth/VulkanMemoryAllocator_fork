@@ -560,11 +560,11 @@ void TestSparseBinding()
         images.push_back(std::move(imageInfo));
 
         // Delete all images that expired.
-        for(size_t i = images.size(); i--; )
+        for(size_t j = images.size(); j--; )
         {
-            if(g_FrameIndex >= images[i].endFrame)
+            if(g_FrameIndex >= images[j].endFrame)
             {
-                images.erase(images.begin() + i);
+                images.erase(images.begin() + j);
             }
         }
     }

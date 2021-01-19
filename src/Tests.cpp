@@ -3010,14 +3010,14 @@ static void TestLinearAllocator()
     {
         // Allocate number of buffers of varying size that surely fit into this block.
         VkDeviceSize bufSumSize = 0;
-        for(size_t i = 0; i < maxBufCount; ++i)
+        for(size_t j = 0; j < maxBufCount; ++j)
         {
             bufCreateInfo.size = align_up<VkDeviceSize>(bufSizeMin + rand.Generate() % (bufSizeMax - bufSizeMin), 16);
             BufferInfo newBufInfo;
             res = vmaCreateBuffer(g_hAllocator, &bufCreateInfo, &allocCreateInfo,
                 &newBufInfo.Buffer, &newBufInfo.Allocation, &allocInfo);
             TEST(res == VK_SUCCESS);
-            TEST(i == 0 || allocInfo.offset > prevOffset);
+            TEST(j == 0 || allocInfo.offset > prevOffset);
             bufInfo.push_back(newBufInfo);
             prevOffset = allocInfo.offset;
             bufSumSize += bufCreateInfo.size;
@@ -4043,10 +4043,10 @@ static void TestPool_SameSize()
     // Validate that no buffer is lost. Also check that they are not mapped.
     for(size_t i = 0; i < items.size(); ++i)
     {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &allocInfo);
-        TEST(allocInfo.deviceMemory != VK_NULL_HANDLE);
-        TEST(allocInfo.pMappedData == nullptr);
+        VmaAllocationInfo outAllocInfo;
+        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &outAllocInfo);
+        TEST(outAllocInfo.deviceMemory != VK_NULL_HANDLE);
+        TEST(outAllocInfo.pMappedData == nullptr);
     }
 
     // Free some percent of random items.
@@ -4101,9 +4101,9 @@ static void TestPool_SameSize()
     // Validate that no buffer is lost.
     for(size_t i = 0; i < items.size(); ++i)
     {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &allocInfo);
-        TEST(allocInfo.deviceMemory != VK_NULL_HANDLE);
+        VmaAllocationInfo outAllocInfo;
+        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &outAllocInfo);
+        TEST(outAllocInfo.deviceMemory != VK_NULL_HANDLE);
     }
     
     // Next frame.
@@ -4121,9 +4121,9 @@ static void TestPool_SameSize()
     // Make sure the first BUF_COUNT is lost. Delete them.
     for(size_t i = 0; i < BUF_COUNT; ++i)
     {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &allocInfo);
-        TEST(allocInfo.deviceMemory == VK_NULL_HANDLE);
+        VmaAllocationInfo outAllocInfo;
+        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &outAllocInfo);
+        TEST(outAllocInfo.deviceMemory == VK_NULL_HANDLE);
         vmaDestroyBuffer(g_hAllocator, items[i].Buf, items[i].Alloc);
     }
     items.erase(items.begin(), items.begin() + BUF_COUNT);
@@ -4131,9 +4131,9 @@ static void TestPool_SameSize()
     // Validate that no buffer is lost.
     for(size_t i = 0; i < items.size(); ++i)
     {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &allocInfo);
-        TEST(allocInfo.deviceMemory != VK_NULL_HANDLE);
+        VmaAllocationInfo outAllocInfo;
+        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &outAllocInfo);
+        TEST(outAllocInfo.deviceMemory != VK_NULL_HANDLE);
     }
 
     // Free one item.
@@ -4206,8 +4206,8 @@ static void TestPool_SameSize()
     vmaSetCurrentFrameIndex(g_hAllocator, 11);
     for(size_t i = 0; i < 2; ++i)
     {
-        VmaAllocationInfo allocInfo;
-        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &allocInfo);
+        VmaAllocationInfo outAllocInfo;
+        vmaGetAllocationInfo(g_hAllocator, items[i].Alloc, &outAllocInfo);
     }
 
     // vmaMakePoolAllocationsLost. Only remaining 2 should be lost.
@@ -5478,12 +5478,12 @@ static void TestMappingMultithreaded()
                     {
                         vmaUnmapMemory(g_hAllocator, bufInfo.Allocation);
 
-                        VmaAllocationInfo allocInfo;
-                        vmaGetAllocationInfo(g_hAllocator, bufInfo.Allocation, &allocInfo);
+                        VmaAllocationInfo outAllocInfo;
+                        vmaGetAllocationInfo(g_hAllocator, bufInfo.Allocation, &outAllocInfo);
                         if(mode == MODE::MAP_FOR_MOMENT)
-                            TEST(allocInfo.pMappedData == nullptr);
+                            TEST(outAllocInfo.pMappedData == nullptr);
                         else
-                            TEST(allocInfo.pMappedData == data);
+                            TEST(outAllocInfo.pMappedData == data);
                     }
 
                     switch(rand.Generate() % 3)
