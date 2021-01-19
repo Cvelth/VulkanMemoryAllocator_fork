@@ -53,10 +53,10 @@ filter { "platforms:Linux-x64" }
 buildoptions { "-std=c++0x" }
 links { "vulkan" }
 
-filter { "configurations:Debug", "platforms:x64" }
+filter { "configurations:Debug", "action:vs*" }
 buildoptions { "/MDd" }
 
-filter { "configurations:Release", "platforms:Windows-x64" }
+filter { "configurations:Release", "action:vs*" }
 buildoptions { "/MD" }
 
 
@@ -92,8 +92,8 @@ filter { "platforms:Linux-x64" }
 buildoptions { "-std=c++0x" }
 links { "vulkan" }
 
-filter { "configurations:Debug", "platforms:x64" }
+filter { "configurations:Debug", "action:vs*" }
 buildoptions { "/MDd" }
 
-filter { "configurations:Release", "platforms:Windows-x64" }
+filter { "configurations:Release", "action:vs*" }
 buildoptions { "/MD" }
