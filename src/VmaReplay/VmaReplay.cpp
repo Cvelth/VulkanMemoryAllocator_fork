@@ -1124,10 +1124,7 @@ ConfigurationParser::ConfigurationParser() :
 
 bool ConfigurationParser::Parse(LineSplit& lineSplit)
 {
-    for(auto& it : m_OptionSet)
-    {
-        it = false;
-    }
+    m_OptionSet.assign(m_OptionSet.size(), false);
     for(auto& it : m_OptionValue)
     {
         it.clear();
