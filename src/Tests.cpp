@@ -3637,7 +3637,7 @@ static void ManuallyTestLinearAllocator()
 
         // PUT BREAKPOINT HERE TO CHECK.
         // Inspect: currStats versus origStats, poolStats, statsStr.
-        int I = 0;
+        // int I = 0;
 
         vmaFreeStatsString(g_hAllocator, statsStr);
 
@@ -6291,7 +6291,7 @@ static void BasicTestBuddyAllocator()
 
     VmaPoolStats stats = {};
     vmaGetPoolStats(g_hAllocator, pool, &stats);
-    int DBG = 0; // Set breakpoint here to inspect `stats`.
+    //int DBG = 0; // Set breakpoint here to inspect `stats`.
 
     // Allocate enough new buffers to surely fall into second block.
     for(uint32_t i = 0; i < 32; ++i)
